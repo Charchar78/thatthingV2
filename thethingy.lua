@@ -1,5 +1,3 @@
-print("Joshuuuuuu")
-
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- This is private version of V2 Panel. (By Carolin)
@@ -1301,7 +1299,7 @@ RunService.Heartbeat:Connect(function()
         local isOwned = isOwnedbyPlayer(object)
         local appDependant = ignoreAppleDependancy.Value
         local collectItem = autoItemCollectDependancy.Value
-        if object:IsA("Tool") and isTable == true and isOwned == true and object.Name ~= "Dimensional Shards" and collectItem == true then
+        if object:IsA("Tool") and isTable == true and isOwned == true and object.Name ~= "Dimensional Shards" and object.Name ~= "Blood" and object.Name ~= "Celestial Blood" and collectItem == true then
             if appDependant == false then
                 object.Handle.CFrame = humanoidRootPart.CFrame
                 table.insert(doneObjects, object)
