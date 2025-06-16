@@ -1281,6 +1281,26 @@ local autoClearItems = playerModTab:CreateToggle({
     end,
 })
 
+local invisPotion = playerModTab:CreateButton({
+   Name = "Buy Invis-Potion - ",
+   Callback = function()
+        local BuyItem = ReplicatedStorage.Remotes.BuyItem -- RemoteEvent 
+
+        BuyItem:FireServer(
+            "Invisibility Potion"
+        )
+
+        Rayfield:Notify({
+                Title = "Bought Invis Potion - ",
+                Content = "You look so ugly you need that shi?",
+                Duration = 6.5,
+                Image = "drama",
+            })
+
+
+   end,
+})
+
 local fffendyDivider = playerModTab:CreateDivider()
 
 local doneObjects = {}
@@ -1738,6 +1758,8 @@ local badgeurn = miscTab:CreateButton({
    MCandle:FireServer()
    local forgive = ReplicatedStorage.ForgiveBadge
    forgive:FireServer()
+   local haveSigned = ReplicatedStorage.HaveSigned
+   haveSigned:FireServer()
    end,
 })
 
