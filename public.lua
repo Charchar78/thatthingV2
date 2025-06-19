@@ -464,7 +464,7 @@ local massKey = customSpellTab:CreateInput({
                 Duration = 6.5,
                 Image = "key",
             })
-        elseif Text ~= "Quak35" and Text ~= "WakeuP90" then
+        elseif Text ~= "Quak35" and Text ~= "JosH22" then
             massflameZ = false
             Rayfield:Notify({
                 Title = "Key Denied - ",
