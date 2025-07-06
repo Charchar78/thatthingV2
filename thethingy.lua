@@ -1306,7 +1306,7 @@ local fffendyDivider = playerModTab:CreateDivider()
 local doneObjects = {}
 
 workspace.DescendantAdded:Connect(function(object)
-    if object:IsA("Tool") then
+    if object:IsA("Tool") and object:FindFirstChild("Handle") then
          CollectionService:AddTag(object, "Collectible")
     end
 end)
