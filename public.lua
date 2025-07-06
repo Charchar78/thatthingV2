@@ -560,7 +560,7 @@ local massHellFire = customSpellTab:CreateButton({
             elseif localPlayer.Team.Name == "Royal Bloodline" then
                 local lcount = 0
                 for _, player in ipairs(Players:GetPlayers()) do
-                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Fallen Angel" and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
                         local HellFire2 = ReplicatedStorage.HellFire2 -- RemoteEvent 
                         lcount = lcount + 1
                         HellFire2:FireServer(
@@ -731,6 +731,41 @@ local massPoison = customSpellTab:CreateButton({
             Rayfield:Notify({
                 Title = "Mass Denied - ",
                 Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massVines = customSpellTab:CreateButton({
+    Name = "Mass Vines -",
+    Callback = function()
+        if localPlayer.Team.Name ~= "Mortal" then
+            local lcount = 0
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer then
+                    lcount = lcount + 1
+                local HellFire2 = ReplicatedStorage.VineTrap -- RemoteEvent 
+                    HellFire2:FireServer(
+                        player.Character.HitPart
+                    )
+                end
+                
+            end
+
+            if lcount > 0 then
+                Rayfield:Notify({
+                    Title = "Mass Vines - ",
+                    Content = "The bite of 87' killed " .. lcount .. " people..",
+                    Duration = 6.5,
+                    Image = "leaf",
+                })
+            end
+        elseif localPlayer.Team.Name == "Mortal" then
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You are not the right Rank!",
                 Duration = 6.5,
                 Image = "octagon-alert",
             })
