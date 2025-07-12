@@ -454,7 +454,7 @@ local massKey = customSpellTab:CreateInput({
    PlaceholderText = "Passkey Here.",
    RemoveTextAfterFocusLost = false,
    Callback = function(Text)
-        if Text == "Quak35" or Text == "JosH22" then
+        if Text == "Quak35" or Text == "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
 
             massflameZ = true
 
@@ -464,21 +464,21 @@ local massKey = customSpellTab:CreateInput({
                 Duration = 6.5,
                 Image = "key",
             })
-        elseif Text ~= "Quak35" and Text ~= "JosH22" then
-            massflameZ = false
-            Rayfield:Notify({
-                Title = "Key Denied - ",
-                Content = '"' .. Text .. '" is not a valid Key!',
-                Duration = 6.5,
-                Image = "lock",
-            })
-        elseif Text == "WakeuP90" then
+        elseif Text == "WakeuP90" or Text == "JosH22" then
             massflameZ = false
             Rayfield:Notify({
                 Title = "You Tried 😭 - ",
                 Content = '"' .. Text .. '" is a banned Key!',
                 Duration = 6.5,
                 Image = "trash-2",
+            })
+	elseif Text ~= "Quak35" and Text ~= "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
+            massflameZ = false
+            Rayfield:Notify({
+                Title = "Key Denied - ",
+                Content = '"' .. Text .. '" is not a valid Key!',
+                Duration = 6.5,
+                Image = "lock",
             })
         end
    end,
