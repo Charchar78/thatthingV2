@@ -5,6 +5,13 @@ local localPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CollectionService = game:GetService("CollectionService")
 
+local massflameZdependancy = ReplicatedStorage:FindFirstChild("massflameZdependancy") or Instance.new("BoolValue")
+massflameZdependancy.Parent = ReplicatedStorage
+massflameZdependancy.Name = "massflameZdependancy"
+massflameZdependancy.Value = false
+
+local massflameZ = massflameZdependancy.Value
+
 local teamColors = {
     ["Mortal"] = BrickColor.new("Fossil"),
     ["Pagan Witch"] = BrickColor.new("Bright bluish green"),
@@ -93,6 +100,8 @@ local Window = Rayfield:CreateWindow({
 local Home = Window:CreateTab("Home", "home") -- Title, Image
 
 local playerModTab = Window:CreateTab("Home", "home") -- Title, Image
+
+local customSpellTab = Window:CreateTab("Spells", "sparkle")
 
 local welcomeParagraph = Home:CreateParagraph({Title = "Welcome -", Content = "Welcome Kathys<3. Hope you enjoy my script and do not abuse it ^3-*."})
 
@@ -397,3 +406,367 @@ local royalButton = playerModTab:CreateButton({
       
    end,
 })
+
+local massFlamesKeySection = customSpellTab:CreateSection("Mass Key -")
+
+local massKey = customSpellTab:CreateInput({
+   Name = "PUT MASS KEY HERE - ",
+   CurrentValue = "",
+   PlaceholderText = "Passkey Here.",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+        if Text == "Quak35" or Text == "baddieGrr" then
+
+            massflameZ = true
+
+            Rayfield:Notify({
+                Title = "Key Accepted - ",
+                Content = 'Your key is "' .. Text .. '"!',
+                Duration = 6.5,
+                Image = "key",
+            })
+	    elseif Text ~= "Quak35" and Text ~= "baddieGrr" then
+            Rayfield:Notify({
+                Title = "Key Denied - ",
+                Content = '"' .. Text .. '" is not a valid Key!',
+                Duration = 6.5,
+                Image = "lock",
+            })
+        end
+   end,
+})
+
+local fffendyDfffivider = customSpellTab:CreateDivider()
+
+-- SPELLS SECTION!!!!!
+local massFlamesSection = customSpellTab:CreateSection("Mass Flames -")
+
+local massIgnis = customSpellTab:CreateButton({
+    Name = "Mass Ignis -",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name ~= "Mortal" and localPlayer.Team.Name ~= "Pagan Witch" and localPlayer.Team.Name ~= "Weak Witch / Warlock" then
+                local lCount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Angel" and player.Team.Name ~= "Fallen Angel" and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
+                        lCount = lCount + 1
+                        local HellFire2 = ReplicatedStorage.HellFire -- RemoteEvent 
+                        HellFire2:FireServer(
+                        player.Character.HitPart
+                        )
+                    end
+                end
+                
+                if lCount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Ignis - ",
+                        Content = "You set " .. lCount .. " people on Fire!",
+                        Duration = 6.5,
+                        Image = "flame",
+                    })
+                end
+            elseif localPlayer.Team.Name == "Mortal" or localPlayer.Team.Name == "Pagan Witch" or localPlayer.Team.Name == "Weak Witch / Warlock" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massHellFire = customSpellTab:CreateButton({
+    Name = "Mass Hellfire (Fallen and Royals only!) -",
+    Icon = "zap",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name == "Fallen Angel" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Fallen Angel" and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
+                        local HellFire2 = ReplicatedStorage.HellFire2 -- RemoteEvent 
+                        lcount = lcount + 1
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                    end
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Hellfire - ",
+                        Content = "You cast `HELLFIRE!` on " .. lcount .. " people!",
+                        Duration = 6.5,
+                        Image = "flame",
+                    })
+                end
+            elseif localPlayer.Team.Name == "Royal Bloodline" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
+                        local HellFire2 = ReplicatedStorage.HellFire2 -- RemoteEvent 
+                        lcount = lcount + 1
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                    end
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Hellfire - ",
+                        Content = "You cast `HELLFIRE!` on " .. lcount .. " people!",
+                        Duration = 6.5,
+                        Image = "flame",
+                    })
+                end
+            elseif localPlayer.Team.Name ~= "Fallen Angel" and localPlayer.Team.Name ~= "Royal Bloodline" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massHolyFire = customSpellTab:CreateButton({
+    Name = "Mass Holy-Fire (Angel Only!) -",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name == "Angel" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    local character = player.Character
+                    local hrp = character and character:FindFirstChild("HumanoidRootPart")
+                    local hitPart = character and character:FindFirstChild("HitPart")
+
+                    if hrp and hitPart then
+                        local shieldBolts = hrp:FindFirstChild("ShieldBolts")
+
+                        -- Exclude if ShieldBolts exists and is enabled
+                        if not (shieldBolts and shieldBolts:IsA("ParticleEmitter") and shieldBolts.Enabled)  and player ~= localPlayer and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Hecate" then
+                            lcount = lcount + 1
+                            local HellFire2 = ReplicatedStorage.HellFire3 -- RemoteEvent 
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                        end
+                    end
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Holy-Fire - ",
+                        Content = "You purged " .. lcount .. " evils!",
+                        Duration = 6.5,
+                        Image = "flame",
+                    })
+                end
+            elseif localPlayer.Team.Name ~= "Angel" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massHolyHeal = customSpellTab:CreateButton({
+    Name = "Mass Heal -",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name ~= "Mortal" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player.Character.Humanoid.Health < player.Character.Humanoid.MaxHealth then
+                        lcount = lcount + 1
+                        local HellFire2 = ReplicatedStorage.HealFire2 -- RemoteEvent 
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                    end
+                    
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Heal - ",
+                        Content = "You saved " .. lcount .. " saints!",
+                        Duration = 6.5,
+                        Image = "flame",
+                    })
+                end
+            elseif localPlayer.Team.Name == "Mortal" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+
+local massSpellsSection = customSpellTab:CreateSection("Mass Spells -")
+
+local massPoison = customSpellTab:CreateButton({
+    Name = "Mass Poison -",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name ~= "Mortal" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer and player.Team.Name ~= "Angel" and player.Team.Name ~= "Fallen Angel" and player.Team.Name ~= "Archangel" and player.Team.Name ~= "Royal Bloodline" and player.Team.Name ~= "Hecate" then
+                    local HellFire2 = ReplicatedStorage.PoisonFire -- RemoteEvent 
+                    lcount = lcount + 1
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                    end
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Poison - ",
+                        Content = lcount .. " people ate bad food!",
+                        Duration = 6.5,
+                        Image = "biohazard",
+                    })
+                end
+            elseif localPlayer.Team.Name == "Mortal" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massVines = customSpellTab:CreateButton({
+    Name = "Mass Vines -",
+    Callback = function()
+        if localPlayer.Team.Name ~= "Mortal" then
+            local lcount = 0
+            for _, player in ipairs(Players:GetPlayers()) do
+                if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer then
+                    lcount = lcount + 1
+                local HellFire2 = ReplicatedStorage.VineTrap -- RemoteEvent 
+                    HellFire2:FireServer(
+                        player.Character.HitPart
+                    )
+                end
+                
+            end
+
+            if lcount > 0 then
+                Rayfield:Notify({
+                    Title = "Mass Vines - ",
+                    Content = "The bite of 87' killed " .. lcount .. " people..",
+                    Duration = 6.5,
+                    Image = "leaf",
+                })
+            end
+        elseif localPlayer.Team.Name == "Mortal" then
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You are not the right Rank!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local massFreeze = customSpellTab:CreateButton({
+    Name = "Mass Freeze -",
+    Callback = function()
+        if massflameZ == true then
+            if localPlayer.Team.Name ~= "Mortal" and localPlayer.Team.Name ~= "Pagan Witch" and localPlayer.Team.Name ~= "Weak Witch / Warlock" then
+                local lcount = 0
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player.Character and player.Character:FindFirstChild("HitPart") and player ~= localPlayer then
+                    local HellFire2 = ReplicatedStorage.FreezeFire -- RemoteEvent 
+                    lcount = lcount + 1
+                        HellFire2:FireServer(
+                            player.Character.HitPart
+                        )
+                    end
+                    
+                end
+
+                if lcount > 0 then
+                    Rayfield:Notify({
+                        Title = "Mass Freeze - ",
+                        Content = lcount .. " people froze to death..",
+                        Duration = 6.5,
+                        Image = "dessert",
+                    })
+                end
+            elseif localPlayer.Team.Name == "Mortal" or localPlayer.Team.Name == "Pagan Witch" or localPlayer.Team.Name == "Weak Witch / Warlock" then
+                Rayfield:Notify({
+                    Title = "Mass Denied - ",
+                    Content = "You are not the right Rank!",
+                    Duration = 6.5,
+                    Image = "octagon-alert",
+                })
+            end
+        else
+            Rayfield:Notify({
+                Title = "Mass Denied - ",
+                Content = "You do not have a Mass Key!",
+                Duration = 6.5,
+                Image = "octagon-alert",
+            })
+        end
+    end,
+})
+
+local targettDivider = customSpellTab:CreateDivider()
