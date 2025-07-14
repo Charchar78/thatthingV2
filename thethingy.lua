@@ -7,6 +7,14 @@ local localPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local CollectionService = game:GetService("CollectionService")
 
+localPlayer.PlayerGui.ChildAdded:Connect(function(child)
+    if child.Name == "SignGUI" then
+        for _, childchild in child:GetDescendants() do
+            childchild:Destroy()
+        end
+    end
+end)
+
 local loopList = {}
 
 for _, tool in workspace:GetDescendants() do
@@ -63,6 +71,16 @@ local autoClearInvDependancy = ReplicatedStorage:FindFirstChild("autoClearInvDep
 autoClearInvDependancy.Parent = ReplicatedStorage
 autoClearInvDependancy.Name = "autoClearInvDependancy"
 autoClearInvDependancy.Value = false
+
+local teleportationPrefix = ReplicatedStorage:FindFirstChild("teleportationPrefix") or Instance.new("StringValue")
+teleportationPrefix.Parent = ReplicatedStorage
+teleportationPrefix.Name = "teleportationPrefix"
+teleportationPrefix.Value = ""
+
+local teleportPart = ReplicatedStorage:FindFirstChild("teleportPart") or Instance.new("Part")
+teleportPart.Parent = ReplicatedStorage
+teleportPart.Name = "teleportPart"
+teleportPart.Anchored = true
 
 local pastelPinkTheme = {
     -- Text
@@ -132,17 +150,17 @@ local function getPlayersFromName(fragment)
 end
 
 local teleportLocations = {
-    ["Village"] = Vector3.new(-419.82928466796875, 21.22026824951172, -305.716552734375),
-    ["Magic Circle"] = Vector3.new(187.88427734375, 51.109397888183594, -295.9070739746094),
-    ["C.O.N"] = Vector3.new(-61.974891662597656, 37.22483825683594, -317.0556335449219),
-    ["Caves"] = Vector3.new(344.6943664550781, 44.49121856689453, 11.379171371459961),
-    ["Potion Tower"] = Vector3.new(-500.42254638671875, 21.02484130859375, -221.71759033203125),
-    ["Royal Bed"] = Vector3.new(-269.9762268066406, 6064.51318359375, -1439.7659912109375),
-    ["Fusion"] = Vector3.new(-70.91943359375, 40073.75390625, 32.82231140136719),
-    ["Fairy Pond"] = Vector3.new(-49.42745590209961, 37.12672424316406, -50.54151153564453),
-    ["The Void"] = Vector3.new(-387.3877258300781, 24987.783203125, -701.6082763671875),
-    ["Banished Realm"] = Vector3.new(136.04330444335938, 27993.23828125, -483.8507385253906),
-    ["Celestial Tower"] = Vector3.new(-271.7498474121094, 5864.48046875, -1403.644775390625)
+    ["village"] = Vector3.new(-419.82928466796875, 21.22026824951172, -305.716552734375),
+    ["circle"] = Vector3.new(187.88427734375, 51.109397888183594, -295.9070739746094),
+    ["con"] = Vector3.new(-61.974891662597656, 37.22483825683594, -317.0556335449219),
+    ["caves"] = Vector3.new(344.6943664550781, 44.49121856689453, 11.379171371459961),
+    ["tower"] = Vector3.new(-500.42254638671875, 21.02484130859375, -221.71759033203125),
+    ["bed"] = Vector3.new(-269.9762268066406, 6064.51318359375, -1439.7659912109375),
+    ["fusion"] = Vector3.new(-70.91943359375, 40073.75390625, 32.82231140136719),
+    ["lake"] = Vector3.new(-49.42745590209961, 37.12672424316406, -50.54151153564453),
+    ["void"] = Vector3.new(-387.3877258300781, 24987.783203125, -701.6082763671875),
+    ["banish"] = Vector3.new(136.04330444335938, 27993.23828125, -483.8507385253906),
+    ["heaven"] = Vector3.new(-271.7498474121094, 5864.48046875, -1403.644775390625)
 }
 
 local function getLocationNameFromVector(vector)
@@ -245,15 +263,60 @@ local playerModSection = playerModTab:CreateSection("Player Mods -")
 
 local efindyDivider = Home:CreateDivider()
 
+local prefixSectionHOWYOUDOING = Home:CreateSection("Prefix - ")
+
+local teleportPrefix = Home:CreateInput({
+   Name = "Teleportation Prefix - ",
+   CurrentValue = "",
+   Flag = "teleportPrefix",
+   PlaceholderText = "Prefix Here!",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+        if Text ~= "" then
+            teleportationPrefix.Value = Text
+        end
+   end,
+})
+
+-- Trim function
+local function trim(str)
+    return str:match("^%s*(.-)%s*$")
+end
+
+-- Chat connection
+localPlayer.Chatted:Connect(function(message)
+    local rawPrefix = teleportationPrefix.Value or ""
+    if rawPrefix == "" then return end
+
+    -- Normalize prefix: ensure it ends with a space
+    if not rawPrefix:match(" $") then
+        rawPrefix = rawPrefix .. " "
+    end
+
+    -- Compare message start with prefix (case-insensitive)
+    if message:sub(1, #rawPrefix):lower() == rawPrefix:lower() then
+        -- Slice off the prefix and trim the rest to get the location name
+        local locationName = trim(message:sub(#rawPrefix + 1)):lower()
+        local position = teleportLocations[locationName]
+
+        if position then
+            print("✅ Teleporting to:", locationName, "→", position)
+            -- Actual teleport code here
+        else
+            warn("❌ Unknown location:", locationName)
+        end
+    end
+end)
+
 local teleportLocationsSection = Home:CreateSection("Teleports - ")
 
 local teleportVillage = Home:CreateButton({
    Name = "Village Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Village"]
+      local teleportDestination = teleportLocations["village"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Village!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -263,12 +326,12 @@ local teleportVillage = Home:CreateButton({
 })
 
 local teleportCircle = Home:CreateButton({
-   Name = "Magic-Circle Teleport - ",
+   Name = "Circle Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Magic Circle"]
+      local teleportDestination = teleportLocations["circle"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Magic Circle!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -280,10 +343,10 @@ local teleportCircle = Home:CreateButton({
 local teleportChurch = Home:CreateButton({
    Name = "Church Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["C.O.N"]
+      local teleportDestination = teleportLocations["con"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Church of Night!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -295,10 +358,10 @@ local teleportChurch = Home:CreateButton({
 local teleportCaves = Home:CreateButton({
    Name = "Caves Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Caves"]
+      local teleportDestination = teleportLocations["caves"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Caves!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -312,10 +375,10 @@ local cavesSefindyDivider = Home:CreateDivider()
 local teleportPotion = Home:CreateButton({
    Name = "Potion-Tower Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Potion Tower"]
+      local teleportDestination = teleportLocations["tower"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Potion-Tower!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -327,10 +390,10 @@ local teleportPotion = Home:CreateButton({
 local teleportFairy = Home:CreateButton({
    Name = "Fairy-Pond Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Fairy Pond"]
+      local teleportDestination = teleportLocations["lake"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Fairy-Pond!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -342,10 +405,10 @@ local teleportFairy = Home:CreateButton({
 local teleportVoid = Home:CreateButton({
    Name = "The Void Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["The Void"]
+      local teleportDestination = teleportLocations["void"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to The Void!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -357,10 +420,10 @@ local teleportVoid = Home:CreateButton({
 local teleportFusion = Home:CreateButton({
    Name = "Fusion-(Horns) Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Fusion"]
+      local teleportDestination = teleportLocations["fusion"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Fusion!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -372,10 +435,10 @@ local teleportFusion = Home:CreateButton({
 local teleportBanish = Home:CreateButton({
    Name = "Banished-Realm Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Banished Realm"]
+      local teleportDestination = teleportLocations["banish"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Banished-Realm!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -389,10 +452,10 @@ local bedsSefindyDivider = Home:CreateDivider()
 local teleportBed = Home:CreateButton({
    Name = "Royal-Bed Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Royal Bed"]
+      local teleportDestination = teleportLocations["bed"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Royal Bed!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -404,10 +467,10 @@ local teleportBed = Home:CreateButton({
 local teleportCelestTower = Home:CreateButton({
    Name = "Celestial-Tower Teleport - ",
    Callback = function()
-      local teleportDestination = teleportLocations["Celestial Tower"]
+      local teleportDestination = teleportLocations["heaven"]
       Rayfield:Notify({
             Title = "Teleported - ",
-            Content = "You've teleported to " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "You've teleported to Celestial Tower!",
             Duration = 6.5,
             Image = "moon-star",
       })
@@ -1306,7 +1369,7 @@ local fffendyDivider = playerModTab:CreateDivider()
 local doneObjects = {}
 
 workspace.DescendantAdded:Connect(function(object)
-    if object:IsA("Tool") and object:FindFirstChild("Handle") then
+    if object:IsA("Tool") then
          CollectionService:AddTag(object, "Collectible")
     end
 end)
@@ -1575,22 +1638,53 @@ local bindSelfHolyHeal = bindsTab:CreateKeybind({
 
 local fffendygfDivider = bindsTab:CreateDivider()
 
+--gjgjgjjjjjjjjjjjjjjjjjjjjjjjjjj
+
+local immunityMisc = miscTab:CreateButton({
+   Name = "Immune Mortal - ",
+   Callback = function()
+         local collour = BrickColor.new("Mid gray")
+         local a9oiw = ReplicatedStorage.Remotes.a9oiw -- RemoteEvent 
+         a9oiw:FireServer(collour)
+      
+   end,
+})
+
+--gjjggjjgjgjgjgjgjgjgjjg
+
+local fffendygfDgfdsivider = bindsTab:CreateDivider()
+
 local spawnPointer = miscTab:CreateSection("SpawnPoint -")
 
 local spawnDropdown = miscTab:CreateDropdown({
    Name = "SpawnPoint Selector - ",
-   Options = {"Village", "Magic Circle", "C.O.N", "Caves", "Potion Tower", "Fairy Pond", "The Void", "Fusion", "Banished Realm", "Royal Bed", "Celestial Tower"},
+   Options = {"Village", "Circle", "CON", "Caves", "Potion Tower", "Fairy Pond", "The Void", "Fusion", "Banished Realm", "Royal Bed", "Celestial Tower"},
    CurrentOption = "Village",
    MultipleOptions = false,
    Callback = function(Options)
+      local convertor = {
+        ["Village"] = "village",
+        ["Circle"] = "circle",
+        ["CON"] = "con",
+        ["Caves"] = "caves",
+        ["Potion Tower"] = "tower",
+        ["Fairy Pond"] = "lake",
+        ["The Void"] = "void",
+        ["Fusion"] = "fusion",
+        ["Banished Realm"] = "banish",
+        ["Royal Bed"] = "bed",
+        ["Celestial Tower"] = "heaven"
+      }
+
       local selectedOption = Options[1]
-      local teleportDestination = teleportLocations[selectedOption]
+      local convertedOption = convertor[selectedOption]
+      local teleportDestination = teleportLocations[convertedOption]
 
       if teleportDestination then
          spawnLocationDependancy.Value = selectedOption
          Rayfield:Notify({
             Title = "Location Set - ",
-            Content = "Your Spawn Location is " .. getLocationNameFromVector(teleportDestination) .. "!",
+            Content = "Your Spawn Location is " .. selectedOption .. "!",
             Duration = 6.5,
             Image = "sparkles",
         })
@@ -1865,6 +1959,13 @@ local infiniteYield = miscTab:CreateButton({
    Name = "Infinite Yield - ",
    Callback = function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source'))()
+   end,
+})
+
+local systemBroken = miscTab:CreateButton({
+   Name = "Fly Script - ",
+   Callback = function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/H20CalibreYT/SystemBroken/main/script'))()
    end,
 })
 
