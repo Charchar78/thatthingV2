@@ -1,3 +1,5 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
 local Players = game:GetService("Players")
 local localPlayer = Players.LocalPlayer
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -452,7 +454,7 @@ local massKey = customSpellTab:CreateInput({
    PlaceholderText = "Passkey Here.",
    RemoveTextAfterFocusLost = false,
    Callback = function(Text)
-        if Text == "Quak35" or Text == "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
+        if Text == "SHecate78" or Text == "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
 
             massflameZ = true
 
@@ -470,7 +472,7 @@ local massKey = customSpellTab:CreateInput({
                 Duration = 6.5,
                 Image = "trash-2",
             })
-	elseif Text ~= "Quak35" and Text ~= "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
+	elseif Text ~= "SHecate78" and Text ~= "c0a1fb61-7bdb-44b3-abaa-4f47c7a5ee9f" then
             massflameZ = false
             Rayfield:Notify({
                 Title = "Key Denied - ",
