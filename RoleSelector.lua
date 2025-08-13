@@ -47,3 +47,9 @@ local function roleChange(team, noNotifs)
     sendNotification("Role Changer", )
   end
 end
+
+return {
+    roleChange = roleChange,
+    teamColors = teamColors,
+    sendNotification = sendNotification
+}
