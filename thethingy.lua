@@ -215,7 +215,7 @@ local MainWindow = Rayfield:CreateWindow({
    Icon = "moon-star", -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Loading...",
    LoadingSubtitle = "by Carolin",
-   Theme = pastelPinkTheme, -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   Theme = AmberGlow, -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
    ToggleUIKeybind = "n", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
